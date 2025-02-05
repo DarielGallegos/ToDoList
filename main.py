@@ -1,6 +1,4 @@
-def main():
-	print("Hola Mundo")
-	
+from curses import wrapper
+import src.app as app
 if __name__ == "__main__":
-	print("Principal")
-	main()
+	wrapper(app.main)
