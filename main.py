@@ -1,4 +1,4 @@
 from curses import wrapper
-import src.app as app
+from src.app import main
 if __name__ == "__main__":
-	wrapper(app.main)
+	wrapper(main)
