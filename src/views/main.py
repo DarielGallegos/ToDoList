@@ -1,7 +1,42 @@
-from curses import window
-class MainView:
-    def __init__(self, stdscr:window, title:str):
-        self.stdscr = stdscr
-        self.title = title
+from textual.containers import VerticalScroll, Container
+from textual.app import ComposeResult
+from src.components.menu.Menu import Menu, TreeSelectionMessage
+from src.views.tasks.tasksView import TaskView
+class Views(Container):
+    
+    viewContainer : VerticalScroll = VerticalScroll(id="viewContainer")
+    __views = ["Crear Evento", "Listar Evento", "Actualizar Evento", "Crear Tarea", "Listar Tarea", "Actualizar Tarea"]
+
+    def compose(self) -> ComposeResult:
+        yield Menu("Menu")
+        yield self.viewContainer
+
+    def on_tree_selection_message(self, message: TreeSelectionMessage):
+        """Escucha el mensaje del menú y actualiza el Label."""
+
+        if f"{message.selected_option}" in self.__views:
+            new_view = self.select_view(f"{message.selected_option}")
+            if new_view:
+                self.viewContainer._uncover()
+                self.viewContainer.mount(new_view)
 
     
+    def select_view(self, view: str):
+        typeView = view.split(" ")[1]
+        viewSpecific = view.split(" ")[0]
+        if typeView == "Evento":
+            if viewSpecific == "Crear":
+                return TaskView()
+            elif viewSpecific == "Listar":
+                pass
+            elif viewSpecific == "Actualizar":
+                pass
+        elif typeView == "Tarea":
+            if viewSpecific == "Crear":
+                pass
+            elif viewSpecific == "Listar":
+                pass
+            elif viewSpecific == "Actualizar":
+                pass
+        
+        return None

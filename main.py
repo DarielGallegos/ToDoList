@@ -1,4 +1,3 @@
-from curses import wrapper
-from src.app import main
+from src.app import ToDoList
 if __name__ == "__main__":
-	wrapper(main)
+    ToDoList().run()

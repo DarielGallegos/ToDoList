@@ -1,0 +1,35 @@
+#main {
+    width: 100%;
+    height: 100%;
+    layout: grid;
+    grid-size: 3;
+    grid-gutter: 2;
+    padding: 1;
+}
+#q1 {
+    width: 100%;
+    height: 100%;
+    column-span: 2;
+    content-align: center bottom;
+    text-style: bold;
+}
+
+Button {
+    width: 100%;
+}
+
+Tree {
+    width: 100%;
+    height: 100%;
+    column-span: 1;
+}
+
+#viewContainer{
+    width: 100%;
+    height: 100%;
+    column-span: 2;
+}
+
+#taskView {
+    background: blue;   
+}
