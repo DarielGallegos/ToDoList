@@ -2,6 +2,7 @@ from textual.containers import VerticalScroll, Container
 from textual.app import ComposeResult
 from src.components.menu.Menu import Menu, TreeSelectionMessage
 from src.views.tasks.tasksView import TaskView
+from src.views.tasks.taskList import TaskList
 class Views(Container):
     
     viewContainer : VerticalScroll = VerticalScroll(id="viewContainer")
@@ -12,13 +13,12 @@ class Views(Container):
         yield self.viewContainer
 
     def on_tree_selection_message(self, message: TreeSelectionMessage):
-        """Escucha el mensaje del menú y actualiza el Label."""
-
         if f"{message.selected_option}" in self.__views:
             new_view = self.select_view(f"{message.selected_option}")
             if new_view:
-                self.viewContainer._uncover()
-                self.viewContainer.mount(new_view)
+                self.change_view(new_view)
+        else:
+            self.change_view(Container())
 
     
     def select_view(self, view: str):
@@ -28,7 +28,7 @@ class Views(Container):
             if viewSpecific == "Crear":
                 return TaskView()
             elif viewSpecific == "Listar":
-                pass
+                return TaskList()
             elif viewSpecific == "Actualizar":
                 pass
         elif typeView == "Tarea":
@@ -40,3 +40,9 @@ class Views(Container):
                 pass
         
         return None
+    
+    def change_view(self, new_view):
+        for child in list(self.viewContainer.children):
+            child.remove()
+
+        self.viewContainer.mount(new_view)
