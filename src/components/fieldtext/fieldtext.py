@@ -8,21 +8,19 @@ from datetime import datetime
 
 class FormularioMensaje(Message):
     def __init__(self, titulo: str, descripcion: str, fecha: str) -> None:
-        super().__init__()  # Llamar primero al constructor sin argumentos
+        super().__init__()  
         self.titulo = titulo
         self.descripcion = descripcion
         self.fecha = fecha
 
 class FormularioInput(Widget):
 
-    CSS_PATH = "src/css/input.tcss"
-
     def compose(self):
         
         with Container(id="formulario", classes="formulario"):
             with Container(classes="campo"):
                 yield Label("Título:")
-                self.titulo = Input(placeholder="escriba un titulo", classes="input")
+                self.titulo = Input(placeholder="Escriba un titulo", classes="input")
                 yield self.titulo
 
             with Container(classes="campo"):
@@ -35,7 +33,9 @@ class FormularioInput(Widget):
                 self.fecha = Input(placeholder="Ej: 15/12/2025", classes="input")
                 yield self.fecha
 
-            yield Button("Enviar", id="enviar", classes="boton")
+            with Container(classes="contenedor-boton"):
+                yield Button("Enviar", id="enviar", classes="boton")
+
 
     def on_button_pressed(self, event: Button.Pressed):
         

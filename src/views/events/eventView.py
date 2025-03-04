@@ -6,8 +6,7 @@ from src.components.fieldtext.fieldtext import FormularioInput, FormularioMensaj
 class EventView(Container):
     
     def compose(self) -> ComposeResult:
-        
-        yield Container(Label("Gestión de Eventos", classes="title"))
+
         yield Container(FormularioInput())
 
     def on_formulario_mensaje(self, message: FormularioMensaje):

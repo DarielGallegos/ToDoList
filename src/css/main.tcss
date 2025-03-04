@@ -33,3 +33,56 @@ Tree {
 #taskView {
     background: blue;   
 }
+
+
+
+/* Inputs */
+.formulario {
+    layout: vertical;
+    padding: 1;
+    align: center middle;
+    background: #333; 
+    color: #ddd; 
+}
+
+.campo {
+    layout: horizontal;
+    padding: 0; 
+    margin-bottom: 0; 
+    align: center middle;
+}
+
+.campo Label {
+    width: 30%;
+    color: #aaa;
+    text-style: bold;
+}
+
+.input {
+    width: 60%;
+    max-width: 400;
+    background: #444;
+    color: #ddd;
+    border: round #666;
+}
+
+.contenedor-boton {
+    layout: horizontal;
+    align: right middle; 
+    margin-top: 1;
+    padding-right: 2;
+}
+
+.boton {
+    width: 30%;
+    padding: 1;
+    margin-top: 1;
+    background: #666;
+    color: white;
+    border: round #777;
+    align: center middle;
+}
+
+.boton:hover {
+    background: #777;
+}
