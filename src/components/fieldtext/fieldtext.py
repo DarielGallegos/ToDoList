@@ -1,79 +1,43 @@
 from textual.widget import Widget
 from textual.widgets import Input, Label, Button
 from textual.message import Message
-from textual.containers import Container
-import re
-from datetime import datetime
+from textual.containers import Container, Horizontal
 
+class MensajeAccion(Message):
+    def __init__(self, nombre: str, accion: str) -> None:
+        super().__init__()
+        self.nombre = nombre
+        self.accion = accion
 
-class FormularioMensaje(Message):
-    def __init__(self, titulo: str, descripcion: str, fecha: str) -> None:
-        super().__init__()  # Llamar primero al constructor sin argumentos
-        self.titulo = titulo
-        self.descripcion = descripcion
-        self.fecha = fecha
-
-class FormularioInput(Widget):
-
+class NombreInput(Widget):
     CSS_PATH = "src/css/input.tcss"
 
     def compose(self):
-        
         with Container(id="formulario", classes="formulario"):
-            with Container(classes="campo"):
-                yield Label("Título:")
-                self.titulo = Input(placeholder="escriba un titulo", classes="input")
-                yield self.titulo
+            yield Label("Nombre:")
+            self.nombre = Input(placeholder="Ingrese su nombre", classes="input")
+            yield self.nombre
 
-            with Container(classes="campo"):
-                yield Label("Descripción:")
-                self.descripcion = Input(placeholder="Máx. 100 caracteres", classes="input")
-                yield self.descripcion
-
-            with Container(classes="campo"):
-                yield Label("Fecha (DD/MM/YYYY):")
-                self.fecha = Input(placeholder="Ej: 15/12/2025", classes="input")
-                yield self.fecha
-
-            yield Button("Enviar", id="enviar", classes="boton")
+            with Container(classes="botones"):
+                yield Button("Guardar", id="guardar", classes="boton guardar")
+                yield Button("Editar", id="editar", classes="boton editar")
+                yield Button("Eliminar", id="eliminar", classes="boton eliminar")
 
     def on_button_pressed(self, event: Button.Pressed):
-        
-        errores = False
-
-        if not self.titulo.value.strip():
-            self.titulo.styles.border = ("heavy", "red")
-            self.notify("El título no puede estar vacío.", severity="error")
-            errores = True
+        if not self.nombre.value.strip():
+            self.nombre.styles.border = ("heavy", "red")
+            self.notify("El nombre no puede estar vacío.", severity="error")
+            return
         else:
-            self.titulo.styles.border = ("none", "white")
+            self.nombre.styles.border = ("none", "white")
 
-        if len(self.descripcion.value) > 100:
-            self.descripcion.styles.border = ("heavy", "red")
-            self.notify("La descripción no puede superar los 100 caracteres.", severity="error")
-            errores = True
-        else:
-            self.descripcion.styles.border = ("none", "white")
+        if event.button.id == "guardar":
+            self.accion("Guardado", "Nombre guardado exitosamente.", "success")
+        elif event.button.id == "editar":
+            self.accion("Editado", "Nombre editado correctamente.", "info")
+        elif event.button.id == "eliminar":
+            self.accion("Eliminado", "Nombre eliminado correctamente.", "warning")
 
-        if not re.match(r"^\d{2}/\d{2}/\d{4}$", self.fecha.value):
-            self.fecha.styles.border = ("heavy", "red")
-            self.notify("Formato de fecha inválido. Use DD/MM/YYYY.", severity="error")
-            errores = True
-        else:
-            try:
-                datetime.strptime(self.fecha.value, "%d/%m/%Y")
-                self.fecha.styles.border = ("none", "white")
-            except ValueError:
-                self.fecha.styles.border = ("heavy", "red")
-                self.notify("Fecha inválida. Verifique el día, mes o año.", severity="error")
-                errores = True
-
-        if not errores:
-            self.post_message(
-                FormularioMensaje(  
-                    self.titulo.value, 
-                    self.descripcion.value,  
-                    self.fecha.value 
-                )
-            )
-            self.notify("Formulario enviado correctamente.", severity="success")
+    def accion(self, tipo: str, mensaje: str, severidad: str):
+        self.post_message(MensajeAccion(self.nombre.value, tipo))
+        self.notify(mensaje, severity=severidad)
