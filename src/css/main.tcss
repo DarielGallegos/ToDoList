@@ -15,7 +15,8 @@
 }
 
 Button {
-    width: 100%;
+    width: 50%;
+    
 }
 
 Tree {
@@ -32,4 +33,53 @@ Tree {
 
 #taskView {
     background: blue;   
+}
+
+.botonGuardar, {
+    width: 20%;
+    height: 5;
+    min-width: 15%;
+    background: rgb(2, 131, 145);
+    color: white;
+    border: rgb(41, 40, 39);
+    padding: 1 3;
+    margin-right: 2;
+}
+
+.botonEditar {
+    width: 20%;
+    height: 5;
+    min-width: 15%;
+    background: rgb(222, 143, 95);
+    
+    border: rgb(41, 40, 39);
+    padding: 1 3;
+    margin-right: 2;
+}
+
+.botonEliminar {
+    width: 20%;
+    height: 5;
+    min-width: 15%;
+    background: rgb(229, 0, 70);
+    color: white;
+    border: rgb(41, 40, 39);
+    padding: 1 3;
+    margin-right: 2;
+}
+
+.botonGuardar:hover,{
+    background: rgb(199, 219, 156);
+}
+
+.botonEditar:hover {
+    background: rgb(255, 240, 189);
+}
+
+.botonEliminar:hover {
+    background: rgb(253, 171, 158);
+}
+
+.botones{
+    align: center middle;
 }
