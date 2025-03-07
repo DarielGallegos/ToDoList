@@ -1,71 +1,83 @@
+from textual.widgets import DataTable,Static
 from textual.app import App, ComposeResult
-from textual.widgets import DataTable,Label
-from textual.containers import Vertical
+from textual.containers import VerticalScroll
 from datetime import datetime
+from rich.text import Text
+import estilo
+
 
 ROWS = [
-    ("Tarea", "Descripción", "Fecha", "Actualizar", "Eliminar"),
-    (1, "Completar informe", "2025-04-12", "", ""),
-    (2, "Revisar código", "2025-04-25", "", ""),
-    (3, "Preparar presentación", "2025-04-07", "", ""),
-    (4, "Enviar correo de seguimiento", "2025-04-20", "", ""),
-    (5, "Reunión de equipo", "2025-04-10", "", ""),
-    (6, "Actualizar base de datos", "2025-04-22", "", ""),
-    (7, "Revisar propuestas", "2025-04-28", "", ""),
-    (8, "Redactar reporte", "2025-04-15", "", ""),
-    (9, "Hacer análisis de mercado", "2025-04-05", "", ""),
-    (10, "Verificar resultados", "2025-04-18", "", ""),
+    ("N°", "Titulo", "Descripción", "Fecha", "Actualizar", "Eliminar"),
+    (1, "Informe", "Completar informe", "2025-04-12"),
+    (2, "Código", "Revisar código", "2025-04-25"),
+    (3, "Presentación", "Preparar presentación", "2025-04-07"),
+    (4, "Correo", "Enviar correo de seguimientoseguimientoseguimiento", "2025-04-20"),
+    (5, "Reunión", "Reunión de equipo", "2025-04-10"),
+    (6, "Base de datos", "Actualizar base de datos", "2025-04-22"),
+    (7, "Propuestas", "Revisar propuestas", "2025-04-28"),
+    (8, "Reporte", "Redactar reporte", "2025-04-15"),
+    (9, "Análisis", "Hacer análisis de mercado", "2025-04-05"),
+    (10, "Resultados", "Verificar resultados", "2025-04-18"),
 ]
 
-
 class TablaCambios(App):
+    CSS_PATH = "../../css/try2.tcss"
+    
     def compose(self) -> ComposeResult:
-        with Vertical():
-            self.label = Label("Selecciona una celda")
-            yield self.label
+        with VerticalScroll():
+            yield Static("GESTION DE TAREAS", classes="titulo")
             yield DataTable()
       
     
     def on_mount(self)->None:
-        self.table = self.query_one(DataTable)
-        self.table.add_columns(*ROWS[0])
-        
-        #Orden por medio de columna 2 y sus paramentros de fecha -strptime-
-        sorted_rows = sorted(ROWS[1:], key=lambda row: datetime.strptime(row[2], "%Y-%m-%d"))
 
+        #Estilo
+        self.register_theme(estilo.arctic_theme)  
+        self.theme = "Tabla"
 
-        #Elemento key de las filas
+        #Tabla
+        Tabla= self.table = self.query_one(DataTable)
+        Tabla.zebra_stripes=1
+        Tabla.header_height=1
+
+        #Encabezados
+        header_row = [Text(f" {col} \n  ", style="bold #03AC13 white 20", justify="center") for col in ROWS[0]]
+        Tabla.add_columns(*header_row)
+
+        #Filas
         self.row_keys = []
+        sorted_rows = sorted(ROWS[1:], key=lambda row: datetime.strptime(row[3], "%Y-%m-%d"))
 
-
-        #Orden de Items
         for row in sorted_rows:
-            tarea, descripcion, fecha, _, _ = row
-            #En este caso elige el primer caracter de row que es el número de la tarea, por ello reconoce
-            #dicho como la clave para eliminar
+            styled_row = [ Text(f" {cell} \n  ", style="bold #03AC13 16", justify="left") if idx in [0, 1]  
+                            else Text(f" {str(cell)[:20]}... \n  ", style="bold #03AC13 16", justify="left") if idx == 2 
+                            else Text(f" {cell} \n  ", style="bold #03AC13 16", justify="center") 
+                            for idx, cell in enumerate(row)]
+            
+            styled_row.extend([Text("🔂", style="bold #03AC13 16", justify="center"),
+                               Text("❌", style="bold #03AC13 16", justify="center")])
+            
             key = f"row-{row[0]}"
-            self.row_keys.append(key)
-            self.table.add_row(tarea, descripcion, fecha, "Actualizar", "Eliminar",key=key)
+            
+            Tabla.add_row(*styled_row, key=key)
 
+            self.row_keys.append(key)
+   
 
     #Selección de celdas y eliminar
     def on_data_table_cell_selected(self, event: DataTable.CellSelected) -> None:
         #Basicamente al combinar row y col se crea una coordenada, lo que son las celdas
         row, col = event.coordinate
-        self.label.update(f"Celda seleccionada: ({row}, {col})")
         
         #Luego cuando se verifique que presionamos la columna 4 "Eliminiar"
         #Se procede a eliminar por medio de la KEY que sería como el index de nuestra fila
         #esto debido a que Textual es sensible y le duele que le digan las cosas como son :D
-        if col == 4 :
-            self.label.update(f"Fila {row} eliminada")
+        if col == 5 :
             key_to_remove = self.row_keys[row]
             self.table.remove_row(key_to_remove)
 
             #Luego reiniamos la lista de keys ya que eliminamos una o varias.
             self.row_keys = [key for idx, key in enumerate(self.row_keys) if idx != row] 
-
-        
 
            
 if __name__ == "__main__":
