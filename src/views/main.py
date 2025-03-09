@@ -3,6 +3,7 @@ from textual.app import ComposeResult
 from src.components.menu.Menu import Menu, TreeSelectionMessage
 from src.views.tasks.tasksView import TaskView
 from src.views.tasks.taskList import TaskList
+from src.views.events.eventView import EventView
 class Views(Container):
     
     viewContainer : VerticalScroll = VerticalScroll(id="viewContainer")
@@ -26,7 +27,8 @@ class Views(Container):
         viewSpecific = view.split(" ")[0]
         if typeView == "Evento":
             if viewSpecific == "Crear":
-                return TaskView()
+                #return TaskView()
+                return EventView()
             elif viewSpecific == "Listar":
                 return TaskList()
             elif viewSpecific == "Actualizar":
