@@ -22,5 +22,5 @@ fi
 
 # Run the program
 python3 main.py
-
+# 
 # Run the program in dev mode

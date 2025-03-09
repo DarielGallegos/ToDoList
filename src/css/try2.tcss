@@ -1,0 +1,25 @@
+VerticalScroll{
+    align: center middle;
+    content-align: center middle;
+    width: 100;
+}
+
+.titulo {
+    text-style: bold;
+    text-align: center;
+    color: $primary;
+    border: tall $accent;
+}
+
+
+DataTable{
+    padding: 1 0 0 0;
+    offset: 3 0;
+    width: 95%;
+    height: 100%;
+}
+
+Label {
+    padding:1;
+}
+
