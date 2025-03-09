@@ -1,0 +1,17 @@
+.formulario {
+    layout: grid;
+    grid-size: 2;
+    grid-columns: 1fr 2fr;
+    align: center middle;
+}
+
+.campo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.input {
+    width: 100%;
+    max-width: 400px;
+}
