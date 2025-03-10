@@ -5,7 +5,7 @@ from src.components.fieldtext.fieldtext import FormularioInput, FormularioMensaj
 
 class TaskView(Container):
     def compose(self) -> ComposeResult:
-        yield Markdown("Registrar Tarea", classes="titulo")
+        yield Label("REGISTRO DE TAREAS", classes="titulo")
         
         self.formulario = FormularioInput([
             {"id": "titulo", "label": "Título", "tipo": "texto", "placeholder": "Escriba un título", "max_length": 50, "requerido": True},

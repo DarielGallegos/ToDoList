@@ -54,23 +54,27 @@ class FormularioInput(Widget):
         errores = False
         datos = {}
 
-        # Primero, limpiar errores anteriores
         for campo in self.campos:
             input_widget = self.inputs[campo["id"]]
-            contenedor = input_widget.parent  # Obtener el contenedor del input
-            contenedor.remove_class("error")  # Quitar la clase error si estaba
+            contenedor = input_widget.parent  
+            contenedor.remove_class("error") 
 
         # Validaciones
         for campo in self.campos:
             input_widget = self.inputs[campo["id"]]
             valor = input_widget.text if isinstance(input_widget, TextArea) else input_widget.value
-            contenedor = input_widget.parent  # Obtener el contenedor del input
-            
+            contenedor = input_widget.parent  
+
+            if campo["id"] == "descripcion":
+                datos[campo["id"]] = valor  
+                continue  
+
             if campo.get("requerido", False) and not valor.strip():
                 self.notify(f"El campo '{campo['label']}' no puede estar vacío.", severity="error")
                 contenedor.add_class("error")  # Agregar la clase de error
                 errores = True
-            
+
+         
             if campo.get("validacion"):
                 if not re.match(campo["validacion"], valor):
                     self.notify(f"{campo['mensaje_error']}", severity="error")
@@ -84,15 +88,15 @@ class FormularioInput(Widget):
                     self.notify(f"Fecha inválida en '{campo['label']}'. Formato esperado: DD/MM/YYYY", severity="error")
                     contenedor.add_class("error")
                     errores = True
-            
-            datos[campo["id"]] = valor
 
-        # Si no hay errores, enviar el mensaje y limpiar el formulario
+            datos[campo["id"]] = valor 
+
         if not errores:
             self.post_message(FormularioMensaje(datos))
             for campo in self.campos:
                 input_widget = self.inputs[campo["id"]]
                 input_widget.value = "" if isinstance(input_widget, Input) else ""
+
             list(self.inputs.values())[0].focus()
             self.notify("Formulario enviado correctamente.", severity="success")
 
