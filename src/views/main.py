@@ -4,6 +4,7 @@ from src.components.menu.Menu import Menu, TreeSelectionMessage
 from src.views.tasks.tasksView import TaskView
 from src.views.tasks.taskList import TaskList
 from src.views.events.eventView import EventView
+from src.views.events.eventList import EventList
 
 class Views(Container):
     
@@ -28,10 +29,9 @@ class Views(Container):
         viewSpecific = view.split(" ")[0]
         if typeView == "Evento":
             if viewSpecific == "Crear":
-                #return TaskView()
                 return EventView()
             elif viewSpecific == "Listar":
-                return TaskList()
+                return EventList()
         elif typeView == "Tarea":
             if viewSpecific == "Crear":
                 return TaskView()

@@ -1,10 +1,9 @@
 from textual.widgets import DataTable,Static
-from textual.app import App, ComposeResult
+from textual.app import App, ComposeResult, Widget
 from textual.containers import VerticalScroll
 from datetime import datetime
 from rich.text import Text
-import estilo
-
+from src.components.Lista import estilo
 
 ROWS = [
     ("N°", "Titulo", "Descripción", "Fecha", "Actualizar", "Eliminar"),
@@ -20,19 +19,21 @@ ROWS = [
     (10, "Resultados", "Verificar resultados", "2025-04-18"),
 ]
 
-class TablaCambios(App):
-    CSS_PATH = "../../css/try2.tcss"
-    
+class TablaCambios(Widget):    
+    def __init__(self, tipo: str):
+        super().__init__()
+        self.tipo = tipo
+
     def compose(self) -> ComposeResult:
         with VerticalScroll():
-            yield Static("GESTION DE TAREAS", classes="titulo")
+            yield Static(f"GESTION DE {self.tipo.upper()}", classes="titulo")
             yield DataTable()
       
     
     def on_mount(self)->None:
 
         #Estilo
-        self.register_theme(estilo.arctic_theme)  
+        self.theme = estilo.arctic_theme  
         self.theme = "Tabla"
 
         #Tabla
@@ -80,6 +81,3 @@ class TablaCambios(App):
             self.row_keys = [key for idx, key in enumerate(self.row_keys) if idx != row] 
 
            
-if __name__ == "__main__":
-    app = TablaCambios()
-    app.run()
