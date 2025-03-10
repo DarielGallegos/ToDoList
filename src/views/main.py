@@ -4,10 +4,11 @@ from src.components.menu.Menu import Menu, TreeSelectionMessage
 from src.views.tasks.tasksView import TaskView
 from src.views.tasks.taskList import TaskList
 from src.views.events.eventView import EventView
+
 class Views(Container):
     
     viewContainer : VerticalScroll = VerticalScroll(id="viewContainer")
-    __views = ["Crear Evento", "Listar Evento", "Actualizar Evento", "Crear Tarea", "Listar Tarea", "Actualizar Tarea"]
+    __views = ["Crear Evento", "Listar Evento", "Crear Tarea", "Listar Tarea"]
 
     def compose(self) -> ComposeResult:
         yield Menu("Menu")
@@ -31,15 +32,11 @@ class Views(Container):
                 return EventView()
             elif viewSpecific == "Listar":
                 return TaskList()
-            elif viewSpecific == "Actualizar":
-                pass
         elif typeView == "Tarea":
             if viewSpecific == "Crear":
-                pass
+                return TaskView()
             elif viewSpecific == "Listar":
-                pass
-            elif viewSpecific == "Actualizar":
-                pass
+                return TaskList()
         
         return None
     

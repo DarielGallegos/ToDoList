@@ -7,7 +7,7 @@ class ToDoList(App):
 
 	def compose(self) -> ComposeResult:
 		## Asigna el titulo al aplicativo
-		self.screen.title = "To Do List"
+		self.screen.title = "TaskTUI"
 		yield Header()
 		yield Views(id="main")
 		yield Footer()

@@ -27,10 +27,8 @@ class Menu(Tree[str]):
         task = self.tree.root.add("Task", expand=True)
         events.add_leaf("Crear Evento")
         events.add_leaf("Listar Evento")
-        events.add_leaf("Actualizar Evento")
         task.add_leaf("Crear Tarea")
         task.add_leaf("Listar Tarea")
-        task.add_leaf("Actualizar Tarea")
         yield self.tree
 
     def on_tree_node_selected(self, event: Tree.NodeSelected) -> None:
