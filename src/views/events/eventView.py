@@ -5,7 +5,7 @@ from src.components.fieldtext.fieldtext import FormularioInput, FormularioMensaj
 
 class EventView(Container):
     def compose(self) -> ComposeResult:
-        yield Markdown("Registrar Evento", classes="titulo")
+        yield Label("Registrar Evento", classes="titulo")
         
         self.formulario = FormularioInput([
             {"id": "titulo", "label": "Título", "tipo": "texto", "placeholder": "Escriba un título", "max_length": 50, "requerido": True},
