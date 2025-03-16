@@ -1,5 +1,5 @@
 import sqlite3
-from repositories.connect.repositoryDB import RepositoryDB
+from src.backend.repositories.connect.repositoryDB import RepositoryDB
 class EstadosContract(RepositoryDB):
     __table__ = "estados"
     __attributes__ = {

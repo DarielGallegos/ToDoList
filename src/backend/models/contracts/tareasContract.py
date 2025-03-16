@@ -1,6 +1,6 @@
 import sqlite3
-from repositories.connect.repositoryDB import RepositoryDB
-from models.data.task import Tareas
+from src.backend.repositories.connect.repositoryDB import RepositoryDB
+from src.backend.models.data.task import Tareas
 class TareasContract(RepositoryDB):
     __table__ = "tareas"
     __attributes__ = {
@@ -76,10 +76,10 @@ class TareasContract(RepositoryDB):
             cur.execute(query)
             self.conn.commit()
             cur.close()
-            return {"status":True }
+            return {"status":True, "data":task }
         except sqlite3.Error as e:
             print(e)
-            return {"status":False }
+            return {"status":False, "data":None }
     
     def update(self, task: Tareas) -> dict:
         try:
@@ -92,10 +92,10 @@ class TareasContract(RepositoryDB):
             cur.execute(query)
             self.conn.commit()
             cur.close()
-            return {"status":True }
+            return {"status":True, "data":task }
         except sqlite3.Error as e:
             print(e)
-            return {"status":False }
+            return {"status":False, "data":None }
     
     def delete(self, id:int) -> dict:
         try:
@@ -104,7 +104,7 @@ class TareasContract(RepositoryDB):
             cur.execute(query)
             self.conn.commit()
             cur.close()
-            return {"status":True }
+            return {"status":True, "data":id }
         except sqlite3.Error as e:
             print(e)
-            return {"status":False }
+            return {"status":False, "data": None }

@@ -1,6 +1,6 @@
 import sqlite3
-from repositories.connect.repositoryDB import RepositoryDB
-from models.data.events import Events
+from src.backend.repositories.connect.repositoryDB import RepositoryDB
+from src.backend.models.data.events import Events
 class EventContract(RepositoryDB):
     __table__ = "eventos"
     __attributes__ = {
@@ -15,7 +15,7 @@ class EventContract(RepositoryDB):
     __relations__ = {
         "fk_estado": f"FOREIGN KEY({__attributes__['estado'][0]}) REFERENCES estados(id)"
     }
-    
+
     def __init__(self):
         super().__init__()
     
@@ -74,10 +74,10 @@ class EventContract(RepositoryDB):
             cur.execute(query)
             self.conn.commit()
             cur.close()
-            return {"status":True }
+            return {"status":True, "data":event }
         except sqlite3.Error as e:
             print(e)
-            return {"status":False }
+            return {"status":False, "data":None }
     
     def update(self, event:Events) -> dict:
         try:
@@ -90,10 +90,10 @@ class EventContract(RepositoryDB):
             cur.execute(query)
             self.conn.commit()
             cur.close()
-            return {"status":True }
+            return {"status":True, "data":event }
         except sqlite3.Error as e:
             print(e)
-            return {"status":False }
+            return {"status":False, "data":None }
     
     def delete(self, id:int) -> dict:
         try:
@@ -102,7 +102,7 @@ class EventContract(RepositoryDB):
             cur.execute(query)
             self.conn.commit()
             cur.close()
-            return {"status":True }
+            return {"status":True, "data":id }
         except sqlite3.Error as e:
             print(e)
-            return {"status":False }
+            return {"status":False, "data":None }

@@ -1,9 +1,8 @@
-from models.contracts.eventsContract import EventContract
-from models.contracts.tareasContract import TareasContract
-from models.contracts.estadosContract import EstadosContract
-from models.contracts.prioridadesContract import PrioridadesContract
-from models.data.task import Tareas
-def init_tables():
+from src.backend.models.contracts.eventsContract import EventContract
+from src.backend.models.contracts.tareasContract import TareasContract
+from src.backend.models.contracts.estadosContract import EstadosContract
+from src.backend.models.contracts.prioridadesContract import PrioridadesContract
+def init_database():
     # Crear Tablas en la Base de Datos
     PrioridadesContract().createTable()
     EstadosContract().createTable()
