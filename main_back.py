@@ -1,11 +1,11 @@
-from models.init import init_database
-from controllers.taskController import TaskController
-from controllers.eventController import EventController
-from models.data.task import Tareas
-from models.data.events import Events
+from src.backend.models.init import init_database
+from src.backend.controllers.taskController import TaskController
+from src.backend.controllers.eventController import EventController
+from src.backend.models.data.task import Tareas
+from src.backend.models.data.events import Events
 if __name__ == "__main__":
-    # init_database()
     """
+    init_database()
     # Instanciar Controladores
     taskController = TaskController()
     eventController = EventController()
@@ -36,5 +36,3 @@ if __name__ == "__main__":
     print(taskController.getTasks())
     print(eventController.getEvents())
     """
-
-    
