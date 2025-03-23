@@ -1,7 +1,7 @@
 from textual.widget import Widget 
 from textual.widgets import Input, Label, Button, TextArea, Select
 from textual.message import Message
-from textual.containers import Container
+from textual.containers import Container, ScrollableContainer
 import re
 from datetime import datetime
 from src.components.buttons.send_button import Send_button
@@ -21,40 +21,41 @@ class FormularioInput(Widget):
         self.inputs = {}  # Almacena referencias a los inputs
 
     def compose(self):
-        with Container(id="formulario", classes="formulario"):
-            for campo in self.campos:
-                if campo["id"] in ["titulo", "descripcion"]:
-                    with Container(classes="campo-contenedor"):
-                        yield Label(campo["label"] + ":", classes="campo-label")
-                        if campo["tipo"] == "textarea":
-                            input_widget = TextArea(
-                                text="", classes="campo-textarea", id=campo["id"],
-                                language="markdown", show_line_numbers=False
-                            )
-                        else:
-                            input_widget = Input(placeholder=campo.get("placeholder", ""), classes="campo-input")
-                        self.inputs[campo["id"]] = input_widget
-                        yield input_widget
+        with Container():
+            with ScrollableContainer(id="formulario_task", classes="formulario-task"):
+                for campo in self.campos:
+                    if campo["id"] in ["titulo", "descripcion"]:
+                        with Container(classes="campo-contenedor"):
+                            yield Label(campo["label"] + ":", classes="campo-label")
+                            if campo["tipo"] == "textarea":
+                                input_widget = TextArea(
+                                    text="", classes="campo-textarea", id=campo["id"],
+                                    language="markdown", show_line_numbers=False
+                                )
+                            else:
+                                input_widget = Input(placeholder=campo.get("placeholder", ""), classes="campo-input")
+                            self.inputs[campo["id"]] = input_widget
+                            yield input_widget
 
-            with Container(classes="campo-contenedor"):
-                yield Label("Prioridad:", classes="campo-label")
-                self.select_prioridad = Select(
-                    options=[
-                        ("Selecciona tu prioridad", ""),
-                        ("Urgente e Importante", "Urgente e Importante"),
-                        ("Importante pero no Urgente", "Importante pero no Urgente"),
-                        ("Urgente pero no Importante", "Urgente pero no Importante"),
-                        ("Ni Importante ni Urgente", "Ni Importante ni Urgente")
-                    ],
-                    value="",
-                    classes="campo-select"
-                )
-                yield self.select_prioridad
+                with Container(classes="campo-contenedor"):
+                    yield Label("Prioridad:", classes="campo-label")
+                    self.select_prioridad = Select(
+                        options=[
+                            ("Selecciona tu prioridad", ""),
+                            ("Urgente e Importante", "Urgente e Importante"),
+                            ("Importante pero no Urgente", "Importante pero no Urgente"),
+                            ("Urgente pero no Importante", "Urgente pero no Importante"),
+                            ("Ni Importante ni Urgente", "Ni Importante ni Urgente")
+                        ],
+                        value="",
+                        classes="campo-select"
+                    )
+                    yield self.select_prioridad
 
-            with Container(classes="fecha-venci-contenedor"):
-                yield Label("Fecha de Vencimiento:", classes="campo-label")
-                self.calendario_vencimiento = Calendario()
-                yield self.calendario_vencimiento
+                with Container(classes="fecha-venci-contenedor"):
+                    yield Label("Fecha de Vencimiento:", classes="campo-label")
+                    self.calendario_vencimiento = Calendario()
+                    yield self.calendario_vencimiento
 
             with Container(classes="contenedor-boton"):
                 yield Send_button()

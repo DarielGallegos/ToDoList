@@ -1,7 +1,7 @@
 from textual.widget import Widget
 from textual.widgets import Input, Label, Button, TextArea
 from textual.message import Message
-from textual.containers import Container
+from textual.containers import Container, ScrollableContainer
 import re
 from datetime import datetime
 from src.components.buttons.send_button import Send_button
@@ -20,31 +20,32 @@ class FormularioEvento(Widget):
         self.inputs = {}
         
     def compose(self):
-        with Container(id="formulario_evento", classes="formulario-evento"):
-            for campo in self.campos:
-                if campo["id"] in ["titulo", "descripcion", "ubicacion"]:
-                    with Container(classes="campo-contenedor"):
-                        yield Label(campo["label"] + ":", classes="campo-label")
-                        if campo["tipo"] == "textarea":
-                            input_widget = TextArea(
-                                text="", classes="campo-textarea", id=campo["id"],
-                                language="markdown", show_line_numbers=False
-                            )
-                        else:
-                            input_widget = Input(placeholder=campo.get("placeholder", ""), classes="campo-input")
-                        self.inputs[campo["id"]] = input_widget
-                        yield input_widget
+        with Container():  
+            with ScrollableContainer(id="formulario_evento", classes="formulario-evento"):
+                for campo in self.campos:
+                    if campo["id"] in ["titulo", "descripcion", "ubicacion"]:
+                        with Container(classes="campo-contenedor"):
+                            yield Label(campo["label"] + ":", classes="campo-label")
+                            if campo["tipo"] == "textarea":
+                                input_widget = TextArea(
+                                    text="", classes="campo-textarea", id=campo["id"],
+                                    language="markdown", show_line_numbers=False
+                                )
+                            else:
+                                input_widget = Input(placeholder=campo.get("placeholder", ""), classes="campo-input")
+                            self.inputs[campo["id"]] = input_widget
+                            yield input_widget
 
-            with Container(classes="fechas-contenedor"):
-                with Container(classes="fecha-contenedor"):
-                    yield Label("Fecha Inicio:", classes="campo-label")
-                    self.calendario_inicio = Calendario()
-                    yield self.calendario_inicio
+                with Container(classes="fechas-contenedor"):
+                    with Container(classes="fecha-contenedor"):
+                        yield Label("Fecha Inicio:", classes="campo-label")
+                        self.calendario_inicio = Calendario()
+                        yield self.calendario_inicio
 
-                with Container(classes="fecha-contenedor"):
-                    yield Label("Fecha Final:", classes="campo-label")
-                    self.calendario_final = Calendario()
-                    yield self.calendario_final
+                    with Container(classes="fecha-contenedor"):
+                        yield Label("Fecha Final:", classes="campo-label")
+                        self.calendario_final = Calendario()
+                        yield self.calendario_final
 
             with Container(classes="contenedor-boton"):
                 yield Send_button()
