@@ -1,5 +1,5 @@
-from textual.widget import Widget 
-from textual.widgets import Input, Label, Button, TextArea, Select
+from textual.widget import Widget
+from textual.widgets import Input, Label, Button, TextArea
 from textual.message import Message
 from textual.containers import Container
 import re
@@ -7,23 +7,22 @@ from datetime import datetime
 from src.components.buttons.send_button import Send_button
 from src.components.calendar.calendario import Calendario
 
-
-class FormularioMensaje(Message):
+class FormularioEventoMensaje(Message):
     def __init__(self, datos: dict) -> None:
         super().__init__()
-        self.datos = datos  # Diccionario con los valores del formulario
+        self.datos = datos
 
-class FormularioInput(Widget):
-    def __init__(self, campos, boton_texto="Enviar"):
+class FormularioEvento(Widget):
+    def __init__(self, campos, boton_texto="Crear Evento"):
         super().__init__()
-        self.campos = campos  # Lista de campos con configuración
+        self.campos = campos
         self.boton_texto = boton_texto
-        self.inputs = {}  # Almacena referencias a los inputs
-
+        self.inputs = {}
+        
     def compose(self):
-        with Container(id="formulario", classes="formulario"):
+        with Container(id="formulario_evento", classes="formulario-evento"):
             for campo in self.campos:
-                if campo["id"] in ["titulo", "descripcion"]:
+                if campo["id"] in ["titulo", "descripcion", "ubicacion"]:
                     with Container(classes="campo-contenedor"):
                         yield Label(campo["label"] + ":", classes="campo-label")
                         if campo["tipo"] == "textarea":
@@ -36,25 +35,16 @@ class FormularioInput(Widget):
                         self.inputs[campo["id"]] = input_widget
                         yield input_widget
 
-            with Container(classes="campo-contenedor"):
-                yield Label("Prioridad:", classes="campo-label")
-                self.select_prioridad = Select(
-                    options=[
-                        ("Selecciona tu prioridad", ""),
-                        ("Urgente e Importante", "Urgente e Importante"),
-                        ("Importante pero no Urgente", "Importante pero no Urgente"),
-                        ("Urgente pero no Importante", "Urgente pero no Importante"),
-                        ("Ni Importante ni Urgente", "Ni Importante ni Urgente")
-                    ],
-                    value="",
-                    classes="campo-select"
-                )
-                yield self.select_prioridad
+            with Container(classes="fechas-contenedor"):
+                with Container(classes="fecha-contenedor"):
+                    yield Label("Fecha Inicio:", classes="campo-label")
+                    self.calendario_inicio = Calendario()
+                    yield self.calendario_inicio
 
-            with Container(classes="fecha-venci-contenedor"):
-                yield Label("Fecha de Vencimiento:", classes="campo-label")
-                self.calendario_vencimiento = Calendario()
-                yield self.calendario_vencimiento
+                with Container(classes="fecha-contenedor"):
+                    yield Label("Fecha Final:", classes="campo-label")
+                    self.calendario_final = Calendario()
+                    yield self.calendario_final
 
             with Container(classes="contenedor-boton"):
                 yield Send_button()
@@ -62,7 +52,7 @@ class FormularioInput(Widget):
     def on_mount(self):
         if self.inputs:
             list(self.inputs.values())[0].focus()
-    
+
     def on_input_changed(self, event: Input.Changed):
         input = event.input
         for campo in self.campos:
@@ -76,44 +66,53 @@ class FormularioInput(Widget):
 
         for campo in self.campos:
             input_widget = self.inputs[campo["id"]]
-            contenedor = input_widget.parent  
-            contenedor.remove_class("error") 
+            contenedor = input_widget.parent
+            contenedor.remove_class("error")
 
         # Validaciones
         for campo in self.campos:
             input_widget = self.inputs[campo["id"]]
             valor = input_widget.text if isinstance(input_widget, TextArea) else input_widget.value
-            contenedor = input_widget.parent  
+            contenedor = input_widget.parent
 
             if campo.get("requerido", False) and not valor.strip():
                 self.notify(f"El campo '{campo['label']}' no puede estar vacío.", severity="error")
                 contenedor.add_class("error")
                 errores = True
-        
+
             if campo.get("validacion"):
                 if not re.match(campo["validacion"], valor):
                     self.notify(f"{campo['mensaje_error']}", severity="error")
                     contenedor.add_class("error")
                     errores = True
 
-        if not self.calendario_vencimiento.selected_date:
-            self.notify("Debe seleccionar una fecha de vencimiento.", severity="error")
+        if not self.calendario_inicio.selected_date:
+            self.notify("Debe seleccionar una fecha de inicio.", severity="error")
             errores = True
-        
-        if not self.select_prioridad.value:
-            self.notify("Debe seleccionar una prioridad.", severity="error")
+
+        if not self.calendario_final.selected_date:
+            self.notify("Debe seleccionar una fecha final.", severity="error")
             errores = True
-            
+
+        if self.calendario_inicio.selected_date and self.calendario_final.selected_date:
+            formato_fecha = "%Y-%m-%d" 
+            fecha_inicio = datetime.strptime(self.calendario_inicio.selected_date, formato_fecha)
+            fecha_final = datetime.strptime(self.calendario_final.selected_date, formato_fecha)
+
+            if fecha_final < fecha_inicio:
+                self.notify("La fecha final no puede ser inferior a la fecha de inicio.", severity="error")
+                errores = True
+
         if not errores:
-            datos["fecha_vencimiento"] = self.calendario_vencimiento.selected_date
-            datos["prioridad"] = self.select_prioridad.value
+            datos["fecha_inicio"] = self.calendario_inicio.selected_date
+            datos["fecha_final"] = self.calendario_final.selected_date
 
             for campo in self.campos:
                 input_widget = self.inputs[campo["id"]]
                 valor = input_widget.text if isinstance(input_widget, TextArea) else input_widget.value
                 datos[campo["id"]] = valor
 
-            self.post_message(FormularioMensaje(datos))
+            self.post_message(FormularioEventoMensaje(datos))
 
             for campo in self.campos:
                 input_widget = self.inputs[campo["id"]]
@@ -122,10 +121,13 @@ class FormularioInput(Widget):
                 else:
                     input_widget.value = ""  
 
-            self.calendario_vencimiento.selected_date = None
-            self.calendario_vencimiento.selected_date_label.update("Selecciona una fecha")
-            self.calendario_vencimiento.reset_calendar()
-            self.select_prioridad.value = ""
+            self.calendario_inicio.selected_date = None
+            self.calendario_inicio.selected_date_label.update("Selecciona una fecha")
+            self.calendario_inicio.reset_calendar()
 
-            list(self.inputs.values())[0].focus()
-            self.notify("Formulario enviado correctamente.", severity="success")
+            self.calendario_final.selected_date = None
+            self.calendario_final.selected_date_label.update("Selecciona una fecha")
+            self.calendario_final.reset_calendar()
+
+            list(self.inputs.values())[0].focus()     
+            self.notify("Evento creado correctamente.", severity="success")

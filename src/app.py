@@ -8,8 +8,11 @@ class ToDoList(App):
 
  ## Define BINDINGS
  BINDINGS = [
-  Binding("ctrl+x", "quit", "Salir"),
- ] 
+        Binding("ctrl+x", "quit", "Salir"),
+        Binding("ctrl+←", "prior_month", "Mover Mes Anterior"),
+        Binding("ctrl+→", "next_month", "Mover Mes Siguiente"),
+    ]
+ 
  def compose(self) -> ComposeResult:
   ## Asigna el titulo al aplicativo
   self.screen.title = "To Do List"

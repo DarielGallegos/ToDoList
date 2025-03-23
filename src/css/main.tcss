@@ -52,7 +52,6 @@ Tree {
 }
 
 
-
 /* Inputs */
 
 /*aqui pueden cambiar el color o quitarle el fondo al formulario */ 
@@ -66,7 +65,7 @@ Tree {
 }
 
 .campo-contenedor {
-    border: round #4a90e2;
+    border: round #4a90e2; 
     width: 100%;
     height: 7; 
     margin: 1;
@@ -79,6 +78,37 @@ Tree {
     height: 9; 
     margin: 1;
 }
+
+.fechas-contenedor {
+    layout: horizontal;
+    width: 100%;
+    height: auto;
+    content-align: center middle;
+}
+
+.fecha-contenedor {
+    border: round #4a90e2;
+    width: 50%;
+    height: 12;
+    content-align: center middle;
+}
+
+.fecha-venci-contenedor {
+    border: round #4a90e2;
+    layout: vertical;
+    width: 60%;
+    height: 12;
+    margin-left: 18;
+}
+
+.titulo-calendario {
+    width: 100%;
+    text-style: bold;
+    color: white;
+    background: black;
+    content-align: center middle;
+}
+
 
 .campo-contenedor.error {
     border: heavy red;
@@ -94,6 +124,11 @@ Tree {
     margin-bottom: 1;
 }
 
+.campo-fecha-label {
+    color:rgb(0, 0, 0);
+    background:rgb(0, 0, 0);
+}
+
 .campo-input {
     width: 100%;
     height: 100%;
@@ -107,7 +142,7 @@ Tree {
 
 .campo-textarea {
     width: 100%;
-    height: 15;  
+    height: 100%;  
     background:rgb(0, 0, 0);
     color: white;
     padding: 1;
@@ -118,7 +153,6 @@ Tree {
 .contenedor-boton {
     width: 100%;
     align: center middle;  
-    margin-top: 2;
     padding-right: 2;
 }
 
