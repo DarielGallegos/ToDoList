@@ -2,6 +2,8 @@ from textual.app import ComposeResult
 from textual.containers import Container
 from textual.widgets import Label, Static, Markdown
 from src.components.fieldtext.fieldtext import FormularioInput, FormularioMensaje
+from src.backend.controllers.taskController import TaskController
+from src.backend.models.data.task import Tareas
 
 class TaskView(Container):
     def compose(self) -> ComposeResult:
@@ -14,11 +16,22 @@ class TaskView(Container):
         yield self.formulario
     
     def on_formulario_mensaje(self, message: FormularioMensaje):
-        self.notify(
-            f"Tarea creada:\n"
-            f"Título: {message.datos['titulo']}\n"
-            f"Descripción: {message.datos['descripcion']}\n"
-            f"Prioridad: {message.datos['prioridad']}\n"
-            f"Fecha de Vencimiento: {message.datos['fecha_vencimiento']}",
-            severity="success"
+
+        datos = message.datos
+        task_controller = TaskController()
+
+        tarea = Tareas(
+            titulo=datos["titulo"],
+            descripcion=datos["descripcion"],
+            prioridad =datos["prioridad"],
+            fecha_vencimiento=datos["fecha_vencimiento"]
         )
+
+        try:
+            response = task_controller.createTask(tarea)
+
+            self.notify(response["message"], 
+                        severity="success" if response["status"] else "error")
+
+        except Exception as e:
+            self.notify(str(e), severity="error")
