@@ -1,14 +1,6 @@
 from textual.app import ComposeResult
-<<<<<<< Updated upstream
-from textual.containers import Container
-from textual.widgets import Label
-class TaskList(Container):
-
-    def compose(self) -> ComposeResult:
-        yield Container(Label("Contenido de Carga nuevo de List"))
-=======
 from textual.containers import Container,Label
-from src.components.Lista.Lista_real import TablaCambios
+from src.components.Lista.Lista import TablaCambios
 from src.backend.controllers.taskController import TaskController
 
 
@@ -63,5 +55,5 @@ class TaskList(Container):
             self.tabla_tareas.tabla.add_row(*fila)
         else:
             print("Error: ",response["message"])
->>>>>>> Stashed changes
+
 
