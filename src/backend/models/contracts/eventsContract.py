@@ -58,17 +58,19 @@ class EventContract(RepositoryDB):
         except sqlite3.Error as e:
             print(e)
             return {"status":False, "data":[]}
-    
+        
     def insert(self, event:Events) -> dict:
         try:
             cur = self.conn.cursor()
             query = f"INSERT INTO {self.__table__} ("
             for key in self.__attributes__:
-                query += f"{self.__attributes__[key][0]}, "
+                if key != "id":
+                    query += f"{self.__attributes__[key][0]}, "
             query = query[:-2]
             query += ") VALUES ("
             for key in self.__attributes__:
-                query += f"'{getattr(event, key)}', "
+                if key != "id":
+                    query += f"'{getattr(event, key)}', "
             query = query[:-2]
             query += ")"
             cur.execute(query)
