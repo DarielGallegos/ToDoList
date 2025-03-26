@@ -1,59 +1,35 @@
 from textual.app import ComposeResult
-from textual.containers import Container,Label
+from textual.containers import Container
 from src.components.Lista.Lista import TablaCambios
 from src.backend.controllers.taskController import TaskController
 
 
 class TaskList(Container):
-    def compose (self) -> ComposeResult:         
-        yield Label("Lista de Tareas")
-        self.tabla_tareas=TablaCambios("Tareas")
+    def __init__(self): 
+        super().__init__() 
+        self.tabla_tareas=TablaCambios("Tareas") 
+        self.taskController = TaskController() 
+        
+    def compose(self)->ComposeResult: 
         yield self.tabla_tareas
 
     def _on_mount(self)-> None:
-        self.taskController = TaskController()
-        
-        self.Cargar_tarea()
+        self.cargar_tareas()
 
-    def cargar_eventos(self):
-        response = self.taskController().getTask()
+    def cargar_tareas(self):
+        response = self.taskController.getTasks()
 
-        if response["message"]=="Exito al Obtener las Tareas":
+        if response["message"]=="Exito al Obtener las tareas":
            tareas= response["data"] 
-        
-        self.tabla_eventos.table.clear()
-        for tarea in tareas:
-            fila= [
-                tarea["id"],
-                tarea["titulo"],
-                tarea["descripción"],
-                tarea["fecha_inicio"],
-                tarea["fecha_final"],
-                "🔂", 
-                "❌"   
-            ]
-            self.tabla_tareas.table.add_row(*fila)
+           self.tabla_tareas.data(tareas)
         else:
             print("Error: ",response["message"])
 
-    def cargar_eventos_by_id(self, id: int):
-        response= self.eventController.getTaskById(id)
+    def cargar_tareas_by_ID(self,id:int):
+        response = self.taskController.getTasksById(id)
 
-        if response["message"]== "Exito al Obtener la tarea":
-            tarea = response["data"]
-
-            self.tabla_tareas.table.clear()
-            fila=[
-                tarea["id"],
-                tarea["titulo"],
-                tarea["descripción"],
-                tarea["fecha_inicio"],
-                tarea["fecha_final"],
-                "🔂",  
-                "❌"   
-            ]
-            self.tabla_tareas.tabla.add_row(*fila)
+        if response["message"]=="Exito al Obtener la tarea":
+           tarea= response["data"] 
+           self.tabla_tareas.data(tarea)
         else:
             print("Error: ",response["message"])
-
-
