@@ -41,13 +41,17 @@ class TablaCambios(Widget):
             sorted_rows = sorted(casos, key=lambda caso: datetime.strptime(caso[4], "%Y-%m-%d"))
             for caso in sorted_rows:
                 descripcion = caso[2][:20] + "..." if len(caso[2]) > 25 else caso[2]
+                
+                inicio = datetime.strptime(caso[4], "%Y-%m-%d").strftime("%d-%m-%Y")
+                fin = datetime.strptime(caso[5], "%Y-%m-%d").strftime("%d-%m-%Y")
+
                 fila = [
                     Text(str(caso[0]), justify="center", style="italic"),
                     Text(caso[1], justify="left", style="italic"),
                      Text(descripcion, justify="left", style="italic"),
                     Text(caso[3], justify="left", style="italic"),
-                    Text(caso[4][:10], justify="center", style="italic"),
-                    Text(caso[5][:10], justify="center", style="italic"),
+                    Text(inicio [:10], justify="center", style="italic"),
+                    Text(fin [:10], justify="center", style="italic"),
                     Text("🔂"[:1], justify="center"),
                     Text("❌"[:1], justify="center"), 
                 ]
@@ -60,12 +64,13 @@ class TablaCambios(Widget):
             sorted_rows = sorted(casos, key=lambda caso: datetime.strptime(caso[4], "%Y-%m-%d"))
             for caso in sorted_rows:
                 descripcion = caso[2][:25] + "..." if len(caso[2]) > 25 else caso[2]
+                vencimiento = datetime.strptime(caso[4], "%Y-%m-%d").strftime("%d-%m-%Y")
                 fila = [
                     Text(str(caso[0]), justify="center", style="italic"),
                     Text(caso[1], justify="left", style="italic"),
                     Text(descripcion, justify="left", style="italic"),
                     Text(str(caso[3]), justify="left", style="italic"),
-                    Text(caso[4][:12], justify="center", style="italic"),
+                    Text(vencimiento [:12], justify="center", style="italic"),
                     Text("🔂"[:1], justify="center"),
                     Text("❌"[:1], justify="center"), 
                 ]
