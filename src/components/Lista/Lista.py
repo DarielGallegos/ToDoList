@@ -46,8 +46,8 @@ class TablaCambios(Widget):
                     Text(caso[1], justify="left", style="italic"),
                      Text(descripcion, justify="left", style="italic"),
                     Text(caso[3], justify="left", style="italic"),
-                    Text(caso[4][:9], justify="center", style="italic"),
-                    Text(caso[5][:9], justify="center", style="italic"),
+                    Text(caso[4][:10], justify="center", style="italic"),
+                    Text(caso[5][:10], justify="center", style="italic"),
                     Text("🔂"[:1], justify="center"),
                     Text("❌"[:1], justify="center"), 
                 ]
