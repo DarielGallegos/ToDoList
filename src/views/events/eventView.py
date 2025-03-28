@@ -3,7 +3,8 @@ from textual.containers import Container
 from textual.widgets import Label, Static, Markdown
 from src.components.FormEvent.FormEvent import FormularioEvento, FormularioEventoMensaje # type: ignore
 from src.backend.controllers.eventController import EventController
-from src.backend.models.data.events import Events 
+from src.backend.models.data.events import Events
+from textual import log 
 
 class EventView(Container):
     def compose(self) -> ComposeResult:
@@ -17,23 +18,19 @@ class EventView(Container):
         yield self.formulario
     
     def on_formulario_evento_mensaje(self, message: FormularioEventoMensaje):
-
-        datos = message.datos
-        event_controller = EventController()
-
-        evento = Events(
-            titulo=datos["titulo"],
-            descripcion=datos["descripcion"],
-            ubicacion=datos["ubicacion"],
-            fecha_inicio=datos["fecha_inicio"],
-            fecha_final=datos["fecha_final"]
-        )
-
         try:
-            response = event_controller.createEvent(evento)
+            datos = message.datos
+            event_controller = EventController()
 
-            self.notify(response["message"], 
-                        severity="success" if response["status"] else "error")
+            evento = Events(
+                titulo=datos["titulo"],
+                descripcion=datos["descripcion"],
+                ubicacion=datos["ubicacion"],
+                fecha_inicio=datos["fecha_inicio"],
+                fecha_final=datos["fecha_final"]
+            )
+
+            event_controller.createEvent(evento)
 
         except Exception as e:
             self.notify(str(e), severity="error")

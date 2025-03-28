@@ -16,22 +16,18 @@ class TaskView(Container):
         yield self.formulario
     
     def on_formulario_mensaje(self, message: FormularioMensaje):
-
-        datos = message.datos
-        task_controller = TaskController()
-
-        tarea = Tareas(
-            titulo=datos["titulo"],
-            descripcion=datos["descripcion"],
-            prioridad =datos["prioridad"],
-            fecha_vencimiento=datos["fecha_vencimiento"]
-        )
-
         try:
-            response = task_controller.createTask(tarea)
+            datos = message.datos
+            task_controller = TaskController()
 
-            self.notify(response["message"], 
-                        severity="success" if response["status"] else "error")
+            tarea = Tareas(
+                titulo=datos["titulo"],
+                descripcion=datos["descripcion"],
+                prioridad =datos["prioridad"],
+                fecha_vencimiento=datos["fecha_vencimiento"]
+            )
+
+            task_controller.createTask(tarea)
 
         except Exception as e:
             self.notify(str(e), severity="error")
