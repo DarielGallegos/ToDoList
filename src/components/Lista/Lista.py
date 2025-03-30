@@ -4,6 +4,8 @@ from src.components.Lista import estilo
 from textual.widgets import DataTable, Static
 from textual.app import ComposeResult, Widget
 from textual.containers import VerticalScroll
+from src.backend.controllers.eventController import EventController 
+from src.backend.controllers.taskController import TaskController 
 
 class TablaCambios(Widget):    
     def __init__(self, tipo: str):
@@ -11,6 +13,8 @@ class TablaCambios(Widget):
         self.tipo = tipo
         self.table = DataTable()
         self.row_keys = []
+        self.eventController = EventController() 
+        self.taskController = TaskController()
 
     def compose(self) -> ComposeResult:
         with VerticalScroll():
@@ -85,11 +89,17 @@ class TablaCambios(Widget):
         if self.tipo.upper() == "EVENTOS":
             if col == 7:  
                 key_to_remove = self.row_keys[row]
-                self.table.remove_row(key_to_remove)
+                evento_id = int(self.table.get_row(key_to_remove)[0].plain) 
+                response = self.eventController.deleteEvent(evento_id)
                 self.row_keys = [key for idx, key in enumerate(self.row_keys) if idx != row]
+                self.table.remove_row(key_to_remove) 
+                self.notify(f"✅ {response['message']}", severity="success")
+                
         if self.tipo.upper() == "TAREAS":
             if col == 6:  
                 key_to_remove = self.row_keys[row]
-                self.table.remove_row(key_to_remove)
+                task_id = int(self.table.get_row(key_to_remove)[0].plain) 
+                response = self.taskController.deleteTask(task_id)
                 self.row_keys = [key for idx, key in enumerate(self.row_keys) if idx != row]
-        
+                self.table.remove_row(key_to_remove)
+                self.notify(f"✅ {response['message']}", severity="success")
