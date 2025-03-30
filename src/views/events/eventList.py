@@ -16,20 +16,23 @@ class EventList(Container):
         self.cargar_eventos() 
     
     def cargar_eventos(self): 
-        response = self.eventController.getEvents() 
+        try:
+            response = self.eventController.getEvents() 
+            
+            if response["message"]=="Exito al Obtener los eventos": 
+                eventos= response["data"] 
+                self.tabla_eventos.data(eventos)
+        except Exception as e:
+              self.notify(str(e), severity="error")
         
-        if response["message"]=="Exito al Obtener los eventos": 
-            eventos= response["data"] 
-            self.tabla_eventos.data(eventos)
-        else: 
-            print("Error: ",response["message"]) 
-    
-    
     def cargar_evento_by_ID(self,id:int):
-        response = self.eventController.getEventById(id)
+        try:
+            response = self.eventController.getEventById(id)
 
-        if response["message"]=="Exito al Obtener los eventos":
-           evento= response["data"] 
-           self.tabla_eventos.data(evento)
-        else:
-            print("Error: ",response["message"])
+            if response["message"]=="Exito al Obtener los eventos":
+                evento= response["data"] 
+                self.tabla_eventos.data(evento)
+        except Exception as e:
+              self.notify(str(e), severity="error")
+        
+    

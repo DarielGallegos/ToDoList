@@ -17,19 +17,21 @@ class TaskList(Container):
         self.cargar_tareas()
 
     def cargar_tareas(self):
-        response = self.taskController.getTasks()
+        try:
+            response = self.taskController.getTasks()
 
-        if response["message"]=="Exito al Obtener las tareas":
-           tareas= response["data"] 
-           self.tabla_tareas.data(tareas)
-        else:
-            print("Error: ",response["message"])
+            if response["message"]=="Exito al Obtener las tareas":
+                tareas= response["data"] 
+                self.tabla_tareas.data(tareas)
+        except Exception as e:
+              self.notify(str(e), severity="error")
 
     def cargar_tareas_by_ID(self,id:int):
-        response = self.taskController.getTasksById(id)
+        try: 
+            response = self.taskController.getTasksById(id)
 
-        if response["message"]=="Exito al Obtener la tarea":
-           tarea= response["data"] 
-           self.tabla_tareas.data(tarea)
-        else:
-            print("Error: ",response["message"])
+            if response["message"]=="Exito al Obtener la tarea":
+                tarea= response["data"] 
+                self.tabla_tareas.data(tarea)
+        except Exception as e:
+              self.notify(str(e), severity="error")
