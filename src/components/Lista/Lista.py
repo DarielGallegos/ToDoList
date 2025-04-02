@@ -112,7 +112,6 @@ class TablaCambios(Widget):
                 evento_id = id_caso
                 self.post_message(UpdateEvent(evento_id))
 
-        if self.tipo.upper() == "EVENTOS":
             if col == 7:  
                 evento_id = id_caso
                 response = self.eventController.deleteEvent(evento_id)
