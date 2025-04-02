@@ -6,6 +6,17 @@ from textual.app import ComposeResult, Widget
 from textual.containers import VerticalScroll
 from src.backend.controllers.eventController import EventController 
 from src.backend.controllers.taskController import TaskController 
+from textual.message import Message
+
+class UpdateEvent(Message):
+    def __init__(self, event_id: int) -> None:
+        super().__init__()
+        self.event_id = event_id
+
+class UpdateTask(Message):
+    def __init__(self, task_id: int) -> None:
+        super().__init__()
+        self.task_id = task_id
 
 class TablaCambios(Widget):    
     def __init__(self, tipo: str):
@@ -90,9 +101,7 @@ class TablaCambios(Widget):
 
     def on_data_table_cell_selected(self, event: DataTable.CellSelected) -> None:
         row, col = event.coordinate
-<<<<<<< Updated upstream
-=======
-       
+             
         key_to_remove, descripcion_full, id_caso = self.row_keys[row]
 
         if self.tipo.upper() == "EVENTOS":
@@ -102,7 +111,6 @@ class TablaCambios(Widget):
             if col == 6:  
                 evento_id = id_caso
                 self.post_message(UpdateEvent(evento_id))
->>>>>>> Stashed changes
 
         if self.tipo.upper() == "EVENTOS":
             if col == 7:  
@@ -114,8 +122,7 @@ class TablaCambios(Widget):
                 
 
         if self.tipo.upper() == "TAREAS":
-<<<<<<< Updated upstream
-=======
+
             if col == 2:
                 self.notify(f"Descripción: {descripcion_full}", severity="information")
 
@@ -123,15 +130,10 @@ class TablaCambios(Widget):
                 tarea_id = id_caso
                 self.post_message(UpdateTask(tarea_id))
 
->>>>>>> Stashed changes
             if col == 6:  
                 task_id = id_caso
                 response = self.taskController.deleteTask(task_id)
                 self.row_keys = [key for idx, key in enumerate(self.row_keys) if idx != row]
-<<<<<<< Updated upstream
+
                 self.table.remove_row(key_to_remove)
                 self.notify(f"✅ {response['message']}", severity="success")
-=======
-                self.table.remove_row(key_to_remove)    
-                self.notify(f"✔️ {response['message']}", severity="success")
->>>>>>> Stashed changes
