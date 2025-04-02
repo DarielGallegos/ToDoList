@@ -5,6 +5,7 @@ from textual.containers import Container, ScrollableContainer
 import re
 from datetime import datetime
 from src.components.buttons.send_button import Send_button
+
 from src.components.calendar.calendario import Calendario
 
 
@@ -16,9 +17,9 @@ class FormularioMensaje(Message):
 class FormularioInput(Widget):
     def __init__(self, campos, boton_texto="Enviar"):
         super().__init__()
-        self.campos = campos  # Lista de campos con configuración
+        self.campos = campos 
         self.boton_texto = boton_texto
-        self.inputs = {}  # Almacena referencias a los inputs
+        self.inputs = {}  
 
     def compose(self):
         with Container():
@@ -59,6 +60,7 @@ class FormularioInput(Widget):
 
             with Container(classes="contenedor-boton"):
                 yield Send_button()
+
 
     def on_mount(self):
         if self.inputs:
@@ -129,4 +131,14 @@ class FormularioInput(Widget):
             self.select_prioridad.value = ""
 
             list(self.inputs.values())[0].focus()
-            self.notify("Formulario enviado correctamente.", severity="success")
+            self.notify("✔️ Tarea guardada correctamente.", severity="success")
+   
+    def set_values(self, values: dict):
+        """Establece los valores del formulario"""
+        for field_id, value in values.items():
+            if field_id in self.inputs:
+                input_widget = self.inputs[field_id]
+                if isinstance(input_widget, TextArea):
+                    input_widget.text = value
+                else:
+                    input_widget.value = value

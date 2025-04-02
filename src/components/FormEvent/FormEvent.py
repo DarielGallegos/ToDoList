@@ -131,4 +131,14 @@ class FormularioEvento(Widget):
             self.calendario_final.reset_calendar()
 
             list(self.inputs.values())[0].focus()     
-            self.notify("Evento creado correctamente.", severity="success")
+            self.notify("✔️ Evento guardado correctamente.", severity="success")
+
+    def set_values(self, values: dict):
+        """Establece los valores del formulario"""
+        for field_id, value in values.items():
+            if field_id in self.inputs:
+                input_widget = self.inputs[field_id]
+                if isinstance(input_widget, TextArea):
+                    input_widget.text = value
+                else:
+                    input_widget.value = value
