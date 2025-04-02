@@ -6,6 +6,17 @@ from textual.app import ComposeResult, Widget
 from textual.containers import VerticalScroll
 from src.backend.controllers.eventController import EventController 
 from src.backend.controllers.taskController import TaskController 
+from textual.message import Message
+
+class UpdateEvent(Message):
+    def __init__(self, event_id: int) -> None:
+        super().__init__()
+        self.event_id = event_id
+
+class UpdateTask(Message):
+    def __init__(self, task_id: int) -> None:
+        super().__init__()
+        self.task_id = task_id
 
 class TablaCambios(Widget):    
     def __init__(self, tipo: str):
@@ -85,21 +96,31 @@ class TablaCambios(Widget):
 
     def on_data_table_cell_selected(self, event: DataTable.CellSelected) -> None:
         row, col = event.coordinate
-
+       
         if self.tipo.upper() == "EVENTOS":
+            if col == 6:  
+                key_to_remove = self.row_keys[row] 
+                evento_id = int(self.table.get_row(key_to_remove)[0].plain) 
+                self.post_message(UpdateEvent(evento_id))
+
             if col == 7:  
                 key_to_remove = self.row_keys[row]
                 evento_id = int(self.table.get_row(key_to_remove)[0].plain) 
                 response = self.eventController.deleteEvent(evento_id)
                 self.row_keys = [key for idx, key in enumerate(self.row_keys) if idx != row]
                 self.table.remove_row(key_to_remove) 
-                self.notify(f"✅ {response['message']}", severity="success")
+                self.notify(f"✔️ {response['message']}", severity="success")
                 
         if self.tipo.upper() == "TAREAS":
+            if col == 5:  
+                key_to_remove = self.row_keys[row] 
+                tarea_id = int(self.table.get_row(key_to_remove)[0].plain) 
+                self.post_message(UpdateTask(tarea_id))
+
             if col == 6:  
                 key_to_remove = self.row_keys[row]
                 task_id = int(self.table.get_row(key_to_remove)[0].plain) 
                 response = self.taskController.deleteTask(task_id)
                 self.row_keys = [key for idx, key in enumerate(self.row_keys) if idx != row]
                 self.table.remove_row(key_to_remove)
-                self.notify(f"✅ {response['message']}", severity="success")
+                self.notify(f"✔️ {response['message']}", severity="success")

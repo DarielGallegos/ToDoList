@@ -11,6 +11,7 @@ class ToDoList(App):
         Binding("ctrl+x", "quit", "Salir"),
         Binding("ctrl+←", "prior_month", "Mover Mes Anterior"),
         Binding("ctrl+→", "next_month", "Mover Mes Siguiente"),
+        Binding("ctrl+b", "back", "Regresar a Lista"),
     ]
  
  def compose(self) -> ComposeResult:
