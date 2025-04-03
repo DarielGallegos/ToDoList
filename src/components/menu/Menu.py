@@ -24,7 +24,7 @@ class Menu(Tree[str]):
 		## Crea un arbol de opciones
         self.tree.root.expand()
         events = self.tree.root.add("Eventos", expand=True)
-        task = self.tree.root.add("Task", expand=True)
+        task = self.tree.root.add("Tarea", expand=True)
         events.add_leaf("Crear Evento")
         events.add_leaf("Listar Evento")
         task.add_leaf("Crear Tarea")

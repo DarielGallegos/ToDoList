@@ -21,7 +21,7 @@ class TaskView(Container):
         
         self.formulario = FormularioInput([
             {"id": "titulo", "label": "Título", "tipo": "texto", "placeholder": "Escriba un título", "max_length": 50, "requerido": True},
-            {"id": "descripcion", "label": "Descripción", "tipo": "textarea", "requerido": True},
+            {"id": "descripcion", "label": "Descripción", "tipo": "textarea", "requerido": False},
         ])
         yield self.formulario
     

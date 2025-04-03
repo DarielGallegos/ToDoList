@@ -21,7 +21,7 @@ class EventView(Container):
 
         self.formulario = FormularioEvento([
             {"id": "titulo", "label": "Título", "tipo": "texto", "placeholder": "Escriba un título", "max_length": 50, "requerido": True},
-            {"id": "descripcion", "label": "Descripción", "tipo": "textarea", "requerido": True},
+            {"id": "descripcion", "label": "Descripción", "tipo": "textarea", "requerido": False},
             {"id": "ubicacion", "label": "Ubicación", "tipo": "texto", "placeholder": "Escriba la ubicación", "requerido": True}, 
         ])
         yield self.formulario
